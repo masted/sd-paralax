@@ -12,7 +12,7 @@
 <!--<img class="loadBackground" src="/sd/paralax/img/bck.png">-->
 <div id="parallax">
   <!--<img alt=".1" class="parallaxBackground" src="/sd/paralax/img/bck.png">-->
-  <? foreach ($d['blocks'] as $n => $v) ?>
+  <? foreach ($d['blocks'] as $n => $v) { ?>
   <div id="blockN<?= $n ?>">
     <div class="popularResolution para-totalCenterAlign">
       <div class="story">

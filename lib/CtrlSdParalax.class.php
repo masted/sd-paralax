@@ -3,7 +3,7 @@
 class CtrlSdParalax extends CtrlCommon {
 
   function action_default() {
-    $this->d['mainTpl'] = 'paralax/main';
+    die2(22);
     $this->d['blocks'] = ['A', 'D', 'S'];
   }
 
