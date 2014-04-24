@@ -18,8 +18,8 @@ var optimizationSlide = {
     $("#optimization .fastLayer").animate({
       'margin-top': '500px'
     }, 400, 'easeInOutCubic').animate({
-        'margin-top': '0px'
-      }, 400, 'easeOutCubic', optimizationSlide.resume);
+      'margin-top': '0px'
+    }, 400, 'easeOutCubic', optimizationSlide.resume);
   }
 }
 

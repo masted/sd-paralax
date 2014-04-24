@@ -137,9 +137,7 @@ var paraSample = {}, utilLib = {},
 
 
 (function(arg) {
-
   if (!window.Modernizr) return;
-
   if (window.Modernizr.csstransforms3d) {
     paraSample.bestTranslateType = 'translate3d';
   } else if (window.Modernizr.csstransforms) {
@@ -147,18 +145,11 @@ var paraSample = {}, utilLib = {},
   } else {
     paraSample.bestTranslateType = 'left';
   }
-
   // translate3d, left, translate
-
   var translateType, transformString;
-
   arg.applyHorizontalShift = function(value, $div, translateType) {
-
-
     translateType = translateType || paraSample.bestTranslateType;
-
     if (value == '' || translateType != 'left') {
-
       if (value == '') {
         transformString = '';
       } else if (translateType === 'translate3d') {
@@ -262,24 +253,18 @@ function parallax(param) {
   };
 
   var layerAnimationType = animationTypes.NONE, scrollValueAnimationType = animationTypes.EASED, parallaxLeftAnimationType = animationTypes.NONE;
-
   var layerShiftProperty = param.layerShiftProperty || 'left', parallaxShiftProperty = param.parallaxShiftProperty || 'left';
-
-  //http://easings.net/ru
+  // http://easings.net/ru
   var scrollEasing = 'easeOutExpo', scrollAnimationDuration = 1500;
 
   /* Конец настроек, начало рабочего кода */
-
   var para_cached = this;
-
   var windowWidth;
-
   var slides = {
     $src: undefined,
     array: [],
     singleSlideWidth: 0
   };
-
 
   var scroll = {
     add: function() {
@@ -310,6 +295,7 @@ function parallax(param) {
     }
   }
   var slideChangeModel = 'onBorder';
+
   function layer($src, prnt) {
     //$src.parent().css('display','');
     var hasParalaxBackgroundClass = $src.hasClass(paralaxBackgroundClass);
@@ -368,7 +354,7 @@ function parallax(param) {
          }*/
         this.width = $src.width();
         $src.css('position', '');
-        /*if(isTestSlide){
+        /* if(isTestSlide){
          console.log($src,$src.width());
          }*/
       }
@@ -417,7 +403,6 @@ function parallax(param) {
     }
     /*
      Формулы подсчета в сыром виде:
-
      spd = 0
      halfWindowWidth-halfWidth+inScroll
      spd: (0,1)
@@ -555,18 +540,12 @@ function parallax(param) {
       });
     }
     this.initChildren();
-
     return this;
-
   }
-
-
   this.init = init;
   function init() {
-
     slides.$src = $('#' + parallaxID);
     slides.$src.scroll = 0;
-
     if (scrollbarFullyRemoved) {
       $('html').css('overflow', 'hidden');
     } else {
@@ -575,76 +554,51 @@ function parallax(param) {
         'overflow-y': 'hidden'
       });
     }
-
     slides.$src.children('div').css({
       height: '100%',
       position: 'relative',
       float: 'left',
       overflow: 'hidden'
     });
-
     slides.$src.css({
       width: '100%',
       height: '100%',
       'overflow-x': 'visible',
       position: 'fixed'
     });
-
     if (parallaxLeftAnimationType === animationTypes.CSS3_EASED) {
       CSS3setupAdjust(parallaxShiftProperty, slides.$src);
     }
-
     initSlides();
-
     applyWindowSize();
-
     applyWindowSizeToParallaxLayers();
-
     refreshSlides();
-
-    //$('body').bind('mousewheel', onMouseWheel);
-
+    // $('body').bind('mousewheel', onMouseWheel);
     $('.' + paralaxBackgroundClass).css('z-index', 'auto');
-
     slides.$src.trigger('init');
-
   }
 
   function initSlides() {
-
     /* Обычные слайды */
-
     slides.array = [];
-
     slides.$src.find('> div').each(function() {
       var $slide = $(this);
-      if ($slide.attr('alt'))
-        return;
+      if ($slide.attr('alt')) return;
       var p = new slide($slide, false, slides);
-
       slides.array.push(p);
     });
-
     para_cached.slidesCount = slides.array.length;
-
     /* Сам параллакс выступает в качестве слайда
      * по отношению к фону параллакса */
-
     var p = new slide(slides.$src, true, slides);
     slides.array.push(p);
-
   }
 
   function applyWindowSize() {
-
     windowWidth = $(window).innerWidth();
-
     slides.singleSlideWidth = windowWidth;
-
     scroll.minimalStep = windowWidth / 1000 / 15;
-
     slides.width = 0;
-
     for (var i = 0, l = slides.array.length; i < l; i++) {
       var s = slides.array[i]
       s.applyWindowSize();
@@ -652,21 +606,15 @@ function parallax(param) {
         slides.width += s.width;
       }
     }
-
     slides.$src.width(slides.width);
     scroll.maxLimit = slides.width - windowWidth;
-
     initScrollbar();
-
   }
 
   function applyWindowSizeToParallaxLayers() {
     for (var i = 0, s = slides.array[i]; i < slides.array.length; i++, s = slides.array[i]) {
-
       s.applyWindowSizeToChildren();
     }
-
-
     slides.$src.trigger('engineRebuild', slides.$src.scroll)
     //customEventEngine.call(para_cached, 'engineRebuild', slides.$src.scroll);
   }
@@ -675,65 +623,47 @@ function parallax(param) {
 
   // Участник собственноручно сделанного сглаженного скролла
   function stepF() {
-
     stepToBe = (scroll.cur - slides.$src.scroll) / 15;
-
     if (Math.abs(stepToBe) > scroll.minimalStep) {
       slides.$src.scroll += stepToBe;
-
       refreshSlidesAndFireListeners();
-
     } else if (scroll.doingNextMove) {
       scroll.doingNextMove = false;
-
-
       slides.$src.trigger('finishedMove', slides.$src.scroll)
       slides.$src.removeClass('disable-hover');
-
     }
-
   };
 
   var straightScrollSwitch = false;
 
   function straightScroll() {
-
     slides.$src.scroll = scroll.cur;
-
     refreshSlidesAndFireListeners();
-
     straightScrollSwitch = false;
   }
 
   var lastSlideI = 0, currentSlideI = 0, rawScroll = 0;
 
   function trackSlideChange() {
-
     rawScroll = scroll.cur / slides.singleSlideWidth;
-
     if (slideChangeModel == 'onBorder') {
-
       // смена происходит
       // на границе слайдов
       while (rawScroll <= lastSlideI - .5) {
         para.currentSlideI--;
         lastSlideI = para.currentSlideI;
       }
-
       while (rawScroll >= lastSlideI + .5) {
         para.currentSlideI++;
         lastSlideI = para.currentSlideI;
       }
-
     } else {
-
-      // смена происходит 
+      // смена происходит
       // в центре соседнего слайда
       while (rawScroll <= lastSlideI - 1) {
         para.currentSlideI--;
         lastSlideI = para.currentSlideI;
       }
-
       while (rawScroll >= lastSlideI + 1) {
         para.currentSlideI++;
         lastSlideI = para.currentSlideI;
@@ -742,117 +672,75 @@ function parallax(param) {
   }
 
   function getScrollPositionAndAnimateEverything() {
-
     scroll.cur = scroll.get();
     scroll.delta = Math.abs(slides.$src.scroll - scroll.cur);
-
     scroll.doingNextMove = true;
-
     slides.$src.trigger('startedMove', slides.$src.scroll)
     slides.$src.addClass('disable-hover');
-
-    if (false)
-      alert('getScrollPositionAndAnimateEverything : .cur: ' + scroll.cur + ', $src.scroll: ' + slides.$src.scroll);
-
+    //if (false) alert('getScrollPositionAndAnimateEverything : .cur: ' + scroll.cur + ', $src.scroll: ' + slides.$src.scroll);
     if (straightScrollSwitch) {
-
       straightScroll();
-
     } else if (scrollValueAnimationType == animationTypes.EASED) {
-
-      if (!intervalID)
-        intervalID = setInterval(stepF, 17);
-
+      if (!intervalID) intervalID = setInterval(stepF, 17);
     } else if (scrollValueAnimationType == animationTypes.SUPER_EASED) {
       if (scroll.delta > 70) {
-
         scroll.firstStep = true;
-
         slides.$src.stop(true, true).animate({
           scroll: scroll.cur
         }, {
           step: function(now, fx) {
-
             /* дикий хак */
             if (scroll.firstStep) {
               fx.start = slides.$src.scroll;
               scroll.firstStep = false;
               return;
             }
-
             refreshSlidesAndFireListeners();
             slides.$src.scroll = now;
-
           },
           duration: scrollAnimationDuration,
           easing: scrollEasing
         });
-
       } else {
-
         slides.$src.stop(true, true);
         slides.$src.scroll = scroll.cur;
         refreshSlidesAndFireListeners()
       }
-
     } else if (scrollValueAnimationType == animationTypes.JQ_EASED) {
-
       slides.$src.stop().animate({
         scroll: scroll.cur
       }, {
         step: function(now, fx) {
           slides.$src.scroll = now;
           refreshSlidesAndFireListeners();
-
         },
         duration: scrollAnimationDuration,
         easing: scrollEasing
       });
-
     } else {
       straightScroll();
     }
-
     trackSlideChange();
-
   }
 
   function refreshSlidesAndFireListeners() {
-
     refreshSlides();
-
-
     slides.$src.trigger('scrollChange', slides.$src.scroll)
-    //customEventEngine.call(para_cached, 'scrollChange', slides.$src.scroll);
-
   }
 
   function refreshSlides() {
-
     if (parallaxLeftAnimationType == animationTypes.CSS3_EASED || parallaxLeftAnimationType == animationTypes.NONE) {
       paraSample.applyHorizontalShift(-slides.$src.scroll, slides.$src, parallaxShiftProperty);
     } else if (parallaxLeftAnimationType == animationTypes.JQ_EASED) {
       jqueryAnimateShift(slides.$src, -slides.$src.scroll);
     }
-
-
     for (var i = 0, s = slides.array[0], len = slides.array.length; i < len; i++, s = slides.array[i]) {
       s.adjust();
     }
-
-
-    /*
-     for(var l in scrollListeners){
-
-     scrollListeners[l](slides.$src.scroll);
-     }*/
-
   }
 
   function initScrollbar() {
-
     var scrollListenerTarget;
-
     var firstInit = scroll.$src ? false : true;
 
     if (!firstInit) {
@@ -862,23 +750,17 @@ function parallax(param) {
     }
 
     if (param.touchNotScrollMode) {
-
       /*
        $('html').css('overflow','hidden');
        $('body').css('overflow','hidden');*/
-
       var dummy = $('<div/>').css({
         position: 'absolute',
         display: 'hidden'
       });
-
-      if (firstInit)
-        $('body').append(dummy);
-
+      if (firstInit) $('body').append(dummy);
       scroll.$src = $('<div/>').css({
-        width: slides.width,
+        width: slides.width
       });
-
       var touchStart = 0;
       time = {
         start: 0,
@@ -892,50 +774,26 @@ function parallax(param) {
       };
 
       if (firstInit) {
-
         slides.$src[0].addEventListener("touchmove", function(e) {
-
-
-          if (e.touches.length > 1)
-            return;
-
+          if (e.touches.length > 1) return;
           e.preventDefault();
-
           time.end = new Date().getTime();
-
           var deltaTime = time.end - time.start;
-
           delta = e.touches[0].screenX - touchStart;
-
           speed.cur = delta * delta / 15 * (delta < 0 ? -1 : 1);
-
           scroll.add(-speed.cur);
-
           touchStart = e.touches[0].screenX;
-
           time.start = time.end;
-
         });
-
         slides.$src[0].addEventListener("touchstart", function(e) {
-
           //e.preventDefault();
-
-
           time.start = new Date().getTime();
-
           touchStart = e.touches[0].screenX;
-
           scroll.stop();
-
         });
-
       }
-
       var maxScroll = slides.width - windowWidth, minScroll = 0;
-
       scroll.add = function(delta) {
-
         if (scroll.cur + delta > maxScroll) {
           scroll.cur = maxScroll
         } else if (scroll.cur + delta < minScroll) {
@@ -943,54 +801,40 @@ function parallax(param) {
         } else {
           scroll.cur += delta;
         }
-
         getScrollPositionAndAnimateEverything();
       }
-
       scroll.stop = function() {
         scroll.cur = slides.$src.scroll;
       }
-
       scroll.get = function() {
         return scroll.cur;
       }
     } else {
-
       var scrollTarget;
-
       if (!scrollbarFullyRemoved) {
-
         scroll.$src = $('<div/>').css({
           width: slides.width,
           height: '1px'
         });
-
         $('body').append(scroll.$src);
-
         scrollTarget = window;
       }
 
       scroll.get = function() {
-
         if (scrollbarFullyRemoved) {
           return scroll.cur;
         }
-
         return $(scrollTarget).scrollLeft();
       }
 
       scroll.add = function(delta) {
-
         if (scrollbarFullyRemoved) {
-
           var newScroll = scroll.cur + delta;
-
           if (newScroll < 0) {
             newScroll = 0;
           } else if (newScroll > scroll.maxLimit) {
             newScroll = scroll.maxLimit;
           }
-
           scroll.cur = newScroll;
           getScrollPositionAndAnimateEverything();
           return;
@@ -998,16 +842,12 @@ function parallax(param) {
         $(scrollTarget).scrollLeft($(scrollTarget).scrollLeft() + delta);
       }
       if (firstInit && !scrollbarFullyRemoved) {
-
         $(scrollTarget).on('scroll', getScrollPositionAndAnimateEverything);
       }
     }
-
     para_cached.add = scroll.add;
-
     para_cached.width = slides.width;
   }
-
 
   this.toSlide = function(index) {
     if (index > -1 && index < slides.array.length) {
@@ -1020,15 +860,12 @@ function parallax(param) {
   }
   function closerGeneric(left) {
     var cur = scroll.get(), roun = left ? Math.floor : Math.ceil, curIndex = cur / slides.singleSlideWidth, dest = roun(cur / slides.singleSlideWidth);
-
     if (cur % slides.singleSlideWidth == 0) {
       dest += left ? (-1) : 1;
     }
     dest *= slides.singleSlideWidth;
-
     para_cached.to(dest);
   }
-
 
   this.closerLeft = function() {
     closerGeneric(true);
@@ -1037,20 +874,14 @@ function parallax(param) {
   this.closerRight = function() {
     closerGeneric(false);
   }
+
   function CSS3setupAdjust(shiftProperty, $div) {
-
     var transiTrailer = scrollAnimationDuration + 'ms ease-in-out 1ms';
-
     if (shiftProperty == shiftPropertyTypes.LEFT) {
-
       transi = 'left ' + transiTrailer;
-
     } else if (shiftProperty == shiftPropertyTypes.TRANSLATE || shiftProperty == shiftPropertyTypes.TRANSLATEX || shiftProperty == shiftPropertyTypes.TRANSLATE3D) {
-
       transi = '-webkit-transform ' + transiTrailer;
-
     }
-
     $div.css({
       WebkitTransition: transi,
       MozTransition: transi,
@@ -1058,40 +889,29 @@ function parallax(param) {
       msTransition: transi,
       transition: transi
     });
-
   }
 
   function jqueryAnimateShift($div, value) {
-
     $div.stop(false).animate({
       left: value + 'px',
     }, scrollAnimationDuration, scrollEasing);
   }
-
 
   /* Обратные связи */
 
   var absScroll, relativeScroll;
 
   this.onResizeSlides = function() {
-
     absScroll = scroll.get();
     relativeScroll = absScroll / windowWidth;
-
     applyWindowSize();
-
   }
 
   this.onResizeLayers = function() {
-
     applyWindowSizeToParallaxLayers();
-
     refreshSlidesAndFireListeners();
-
     var newScroll = relativeScroll * windowWidth;
-
     straightScrollSwitch = true;
-
     scroll.add(newScroll - scroll.get());
   }
 }
@@ -1099,7 +919,6 @@ function parallax(param) {
 /*
  * Загрузка
  */
-
 var preloader = {
   disable: undefined,
   start: undefined,
@@ -1117,11 +936,10 @@ var preloader = {
 var loaderClass = 'loadBackground';
 
 preloader.fillVisuals = function(fillAmount, callback) {
-
-  if (!callback)
+  if (!callback) {
     callback = function() {
     };
-
+  }
   $(function() {
     preloader.visuals.loaded/*.stop(false, false)*/.animate({
       'width': preloader.targetLogoWidth * fillAmount
@@ -1137,51 +955,27 @@ preloader.fillVisuals = function(fillAmount, callback) {
       complete: callback
     });
   });
-
 }
 
 preloader.disable = function(param) {
-
   if (param && param.rough) {
-
     $('.' + loaderClass).remove();
     preloader.$slide.remove();
-
   } else {
-
     $('.' + loaderClass).delay(300).animate({
       'opacity': 0
     }, preloader.fillingTime, function() {
       $(this).remove();
     });
-
     preloader.$slide.animate({
-      'opacity': 0,
+      'opacity': 0
       /*left: "-"+preloader.$slide.width()+"px"*/
     }, preloader.fillingTime, function() {
       $(this).remove();
     });
   }
-
   $(document.body).removeClass('unloaded');
-
 }
-$(function() {
-  return;
-  var $media = $('html').find('img,video');
-
-  var lc = 0;
-  $media.on('load', function() {
-    lc++;
-    utilLib.debLog('loadEvent() fired. Total fired: ' + lc + '\n Still need to load ' + ($media.length - lc));
-    console.log(this);
-  });
-  $media.on('error', function() {
-    lc++;
-    utilLib.debLog('errorEvent() fired.');
-    console.log(this);
-  });
-});
 
 preloader.init = function() {
   preloader.visuals = {
@@ -1195,30 +989,18 @@ preloader.init = function() {
 preloader.start = function() {
 
   preloader.init();
-
   var $media = $('html').find('img,video');
-
   var mediaCount = $media.length;
-
   var local_onContentLoad = this.onContentLoad;
-
   var loaded = 0;
-
   preloader.visuals.loaded.add(preloader.visuals.unloaded).css('opacity', 0);
-
   var $subCont = $('.preloaderCont .subCont');
-
   var imageAspect = preloader.visuals.loaded.find('img').width() / preloader.visuals.loaded.find('img').height();
-
   preloader.visuals.loaded.find('img').add(preloader.visuals.unloaded.find('img')).add(preloader.visuals.unloaded).css('width', preloader.targetLogoWidth);
-
   $subCont.add(preloader.visuals.loaded.find('img')).add(preloader.visuals.unloaded.find('img')).css('height', preloader.targetLogoWidth / imageAspect);
 
-
   function getFilesToLoadCount() {
-
     var a = $media.filter(function() {
-
       // причина: в одном из браузеров не обнаружил complete у svg-изображения
       if (this.src && this.src.indexOf('svg') > -1) {
         return false;
@@ -1229,34 +1011,22 @@ preloader.start = function() {
       } else if (this.complete) {
         return false;
       }
-
-      //console.log(this);
       return true;
-
     });
-
     return a.length;
   }
 
   setTimeout(earlyCachedDetection, preloader.delayBeforeLoadCheck);
 
   function earlyCachedDetection() {
-
     var alreadyLoaded = getFilesToLoadCount();
-
     if (alreadyLoaded == 0) {
-
       utilLib.debLog('No need to load.');
-
       preloader.onLoad();
       preloader.disable({
         'rough': true
       });
-
-      return;
-
     } else {
-
       preloader.visuals.loaded.add(preloader.visuals.unloaded).animate({
         'opacity': 1
       }, 300);
@@ -1265,28 +1035,17 @@ preloader.start = function() {
   }
 
   function a() {
-
     var notLoaded = getFilesToLoadCount();
-
     var loadedPart = (mediaCount - notLoaded ) / mediaCount;
-
     if (notLoaded == 0) {
-
       utilLib.debLog('Finished loading');
-
       preloader.fillVisuals(loadedPart, preloader.onLoad);
-
     } else {
-
       setTimeout(a, 1000);
-
       utilLib.debLog('Still need to load ' + notLoaded);
-
       preloader.fillVisuals(loadedPart);
-
     }
   }
-
 }
 
 
@@ -1301,9 +1060,7 @@ preloader.start = function() {
  */
 
 var resizeables = {
-
   engineCreator: undefined,
-
   engine: undefined,
 
   initFromDescript: function(d) {
@@ -1326,8 +1083,7 @@ var resizeables = {
     PORTRAIT: 'portrait'
   },
   criticalReadabilityClass: 'criticalReadability',
-
-  /* Минимально допускаемый движком 
+  /* Минимально допускаемый движком
    * размер шрифта на .criticalReadability*/
   minimalReadableFontSize: 11
 };
@@ -1339,11 +1095,9 @@ var resizeables = {
 resizeables.reference = {w: 1280, h: 923};
 
 resizeables.engineCreator = function() {
-
   var list = [], l, obj = resizeables;
 
   this.findContainers = function() {
-
     for (var fm in obj.fillModes) {
       $('.' + obj.fillModes[fm]).each(function() {
         var a = new aRContainer($(this), obj.fillModes[fm]);
@@ -1354,7 +1108,6 @@ resizeables.engineCreator = function() {
   }
 
   this.getContainersFromDescript = function(d) {
-
     for (var aRCIndex in d) {
       var aRCData = d[aRCIndex];
       aRCData.$src = $(aRCData.srcString);
@@ -1378,11 +1131,8 @@ resizeables.engineCreator = function() {
   }
 
   function aRContainerGeneric(src) {
-
     var $src = src.$src, fitting = src.fitting, multiLayout = src.multiLayout, initialDim, initialDimRelative, aspect, baseFontSize, versionB;
-
     this.recollectMetrics = function() {
-
       if (fitting != obj.fillModes.NONE) {
         $src.css({
           width: '',
@@ -1390,7 +1140,6 @@ resizeables.engineCreator = function() {
           'font-size': ''
         });
       }
-
       initialDim = {
         w: $src.outerWidth(true),
         h: $src.outerHeight(true)
@@ -1401,20 +1150,12 @@ resizeables.engineCreator = function() {
         h: initialDim.h / resizeables.reference.h
       };
       baseFontSize = parseInt($src.css('font-size'), 10);
-
     };
-
-    versionB = true;//src.versionB;
-
-    if (versionB) {
-      $src.css('display', 'inline-block');
-    }
-
+    versionB = true; // src.versionB;
+    if (versionB) $src.css('display', 'inline-block');
     this.recollectMetrics();
-
     criticalElements = $src.find('.' + obj.criticalReadabilityClass);
     this.parent = $src.parent();
-
     var currentOrientation, lastOrientation = 'none';
 
     function updateOrientation() {
@@ -1425,28 +1166,17 @@ resizeables.engineCreator = function() {
     if (src.layoutSwitchThreshold) {
       layoutSwitchThreshold = src.layoutSwitchThreshold;
     }
-
     this.adjust = function() {
-
       if (multiLayout) {
-
         updateOrientation();
-
         if (currentOrientation != lastOrientation) {
-
           $src.addClass(currentOrientation).removeClass(lastOrientation);
-
           this.recollectMetrics();
-
           lastOrientation = currentOrientation;
         }
-
       }
-
       if (fitting == obj.fillModes.NONE) return;
-
       var anchorDim = 'w', complementDim = 'h';
-
       if (fitting === obj.fillModes.FILL_PARENT) {
         if (aspect > windowAspect) {
           anchorDim = 'h';
@@ -1456,69 +1186,46 @@ resizeables.engineCreator = function() {
           anchorDim = 'h';
         }
       }
-
       if (anchorDim == 'h') {
         complementDim = 'w';
       }
-
       var widthToBe, heightToBe, fontSizeToBe;
-
       var dimToBe = {
         h: 0,
         w: 0
       };
-
       var windowDim = {
         h: windowHeight,
         w: windowWidth
       };
-
       var marginNameTranslation = {
         h: 'margin-left',
         w: 'margin-top'
       };
-
-      dimToBe[anchorDim] = windowDim[anchorDim] * (fitting === obj.fillModes.FILL_PARENT || versionB ? 1 : initialDimRelative[anchorDim]
-        );
-
+      dimToBe[anchorDim] = windowDim[anchorDim] * (fitting === obj.fillModes.FILL_PARENT || versionB ? 1 : initialDimRelative[anchorDim]);
       dimToBe[complementDim] = dimToBe[anchorDim];
-
       if (complementDim == 'h') {
         dimToBe[complementDim] /= aspect;
       } else {
         dimToBe[complementDim] *= aspect;
       }
-
-
       if (dimToBe[complementDim] > windowDim[complementDim]) {
-
         var remargin = -(dimToBe[complementDim] - windowDim[complementDim]) / 2;
-
         var complementMargin = marginNameTranslation[anchorDim], anchorMargin = marginNameTranslation[complementDim];
-
         $src.css(anchorMargin, '');
         $src.css(complementMargin, remargin);
       }
-
       fontSizeToBe = dimToBe.h / initialDim.h;
-
-
       $src.width(dimToBe.w);
       $src.height(dimToBe.h);
-
       fontSizeToBe *= baseFontSize;
       $src.css('font-size', fontSizeToBe);
-
       // Здесь следим за тем, чтобы у специально помеченных надписей
       // размер был не меньше порога [ obj.minimalReadableFontSize ]
       for (var i = 0, l = criticalElements.length; i < l; i++) {
-
         $ce = $(criticalElements[i]);
-
         $ce.css('font-size', '');
-
         var calculatedFontSize = parseInt($ce.css('font-size'), 10);
-
         if (calculatedFontSize < obj.minimalReadableFontSize) {
           $ce.css('font-size', obj.minimalReadableFontSize + 'px');
         }
@@ -1531,24 +1238,17 @@ resizeables.engineCreator = function() {
 
 resizeables.engine = new resizeables.engineCreator();
 
-
 function adjustFontSize() {
-
   var diminishing = {
     w: window.innerWidth / resizeables.reference.w,
     h: window.innerHeight / resizeables.reference.h
   };
-
   $('body').css('font-size', baseFontSize * Math.min(diminishing.w, diminishing.h));
 }
 
 /* ex-sample.js */
 
-
-
-/* * Вспомогательные органы управления
- */
-
+// Вспомогательные органы управления
 function wheelStep(windowWidth) {
   var deno = paraSample.settings.mousewheelSlowness.windows;
   if (utilLib.deviceDescription.os == utilLib.OS_TYPES.mac) {
@@ -1558,15 +1258,12 @@ function wheelStep(windowWidth) {
 }
 
 function onMouseWheel(event, delta) {
-
   para.add(-delta * wheelstep);
   event.preventDefault();
   event.stopPropagation();
-
 };
 
 $(document).keydown(function(e) {
-
   if (e.keyCode == '37') {
     para.closerLeft();
     e.preventDefault();
@@ -1574,54 +1271,34 @@ $(document).keydown(function(e) {
     para.closerRight();
     e.preventDefault();
   }
-
 });
 
 function onResize() {
-
   para.onResizeSlides();
-
   // Расщепление onResize параллакса и такая последовательность функций
   // вызваны работой движка автомасштабируемых контейнеров.
   // onResizeLayers зависит от его результатов (утверждение требует проверки),
   // потому onResizeLayers следует после.
-
   nonParaResize();
-
   para.onResizeLayers();
-
 }
 
-
 function nonParaResize() {
-
   windowWidth = $(window).innerWidth();
   windowHeight = $(window).innerHeight();
   windowAspect = windowWidth / windowHeight;
-
   wheelstep = wheelStep(windowWidth);
-
   adjustFontSize();
   resizeables.adjust();
-
 }
 
-
 var hashProcessingSystem = {
-
   doNotApplyHashFromAddressLine: false,
-
   userLock: false,
-
   lastSlideI: 0,
-
   applyHashFromAddressLine: function() {
-
     var addr = self.location.toString(), selectedSlide = addr.slice(addr.indexOf('#') + 1);
-
-    if (selectedSlide == undefined)
-      return;
-
+    if (selectedSlide == undefined) return;
     for (var h in hashProcessingSystem.addrMap) {
       if (selectedSlide == hashProcessingSystem.addrMap[h] && h != hashProcessingSystem.lastSlideI) {
         hashProcessingSystem.userLock = true;
@@ -1630,25 +1307,19 @@ var hashProcessingSystem = {
       }
     }
   },
-
   trackHashChange: function trackHashChange() {
-
     if (paraSample.settings.disableAutoHashChange) return;
-
     // Значение para.currentSlideI соответствует не текущему смещению,
     // а конечному. Значит, после того, как пользователь ввел хэш
     // и начал переход, значение поменяется только один раз.
     if (para.currentSlideI != hashProcessingSystem.lastSlideI) {
-
       hashProcessingSystem.lastSlideI = para.currentSlideI;
-
       if (hashProcessingSystem.userLock) {
         hashProcessingSystem.userLock = false;
         return;
       } else {
         hashProcessingSystem.doNotApplyHashFromAddressLine = true;
       }
-
       var infoString = 'trackHashChange : Changing hash. ';
       if (hashProcessingSystem.doNotApplyHashFromAddressLine) {
         infoString += ' Has doNotApplyHashFromAddressLine.';
@@ -1656,38 +1327,27 @@ var hashProcessingSystem = {
       if (hashProcessingSystem.userLock) {
         infoString += ' Has userHashLock.';
       }
-
       window.location.hash = hashProcessingSystem.addrMap[para.currentSlideI];
-
     }
   }
 }
 
 $(window).on('hashchange', function(e) {
-
   e.preventDefault();
-
   if (hashProcessingSystem.doNotApplyHashFromAddressLine) {
     //tdLib.debLog('jq.window.onhashchange : doNotApplyHashFromAddressLine, so returning.');
     hashProcessingSystem.doNotApplyHashFromAddressLine = false;
     return;
   }
-
   hashProcessingSystem.applyHashFromAddressLine();
-
   return false;
-
 });
 
-
 // Пользователь запускает эту функцию
-
 function startAllParaSystems() {
-
   if (Modernizr.history && window.history.state && window.history.state.mediaIsLoaded) {
     utilLib.debLog('All media is cached. Skipping preloader');
     paraSample.preloaderEnabled = false;
-
   }
   debugging = self.location.toString().indexOf('xe') > -1;
   var parallaxParams = {
@@ -1701,10 +1361,7 @@ function startAllParaSystems() {
   para = new parallax(parallaxParams);
   baseFontSize = parseInt($('body').css('font-size'));
   hiddenImagesContainer = $('.preloadedImages');
-
-
   $('#parallax').on('init', function() {
-
     para.mouseWheelTarget.bind('mousewheel', onMouseWheel);
     $(window).on('resize', onResize);
     hashProcessingSystem.addrMap = $('#parallax>div').map(function(i) {
@@ -1712,40 +1369,26 @@ function startAllParaSystems() {
     });
     hashProcessingSystem.applyHashFromAddressLine();
     preloader.disable();
-
   });
-
   $('#parallax').on('scrollChange', function(amount) {
-
     hashProcessingSystem.trackHashChange();
   });
 
   function onPreloaderLoad() {
-
     if (Modernizr.history) {
-
       $('a').on('click', function(args) {
-
         var href = $(this).attr('href');
         if (href == '' || href == '#') return;
-
         window.history.pushState({
           mediaIsLoaded: 'true'
         }, 'mediaIsLoaded');
-
       });
-
     }
-    ;
-
     resizeables.initFromDescript(aRCDescript);
-
     nonParaResize();
-
     if (parallax) {
       para.init();
     }
-
   }
 
   if (paraSample.preloaderEnabled) {
@@ -1754,7 +1397,6 @@ function startAllParaSystems() {
     preloader.init();
     onPreloaderLoad();
   }
-
   if (paraSample.preloaderEnabled) {
     preloader.start();
   }
